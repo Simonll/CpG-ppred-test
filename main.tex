@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage[english]{babel}
+\usepackage{authblk}
+\usepackage{natbib}
+\usepackage[export]{adjustbox}% http://ctan.org/pkg/adjustbox
+\usepackage{subfiles}
+\usepackage{mathtools}
+\usepackage{xurl}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{lineno}
+\usepackage{adjustbox}
+\usepackage{setspace}
+\begin{document}
+\title{}
+\author[1]{Simon Laurin-Lemay}
+\author[1,2,3]{Nicolas Rodrigue}
+\affil[1]{Department of Biology, Carleton University, Ottawa, Canada}
+\affil[2]{Institute of Biochemistry, Carleton University, Ottawa, Canada}
+\affil[3]{School of Mathematics and Statistics, Carleton University, Ottawa, Canada}
+\date{}
+\maketitle
+
+\section*{Keywords}
+data-augmentation,
+\section*{Declarations}
+Conflict of interest: The authors declare that they have no competing
+interests.
+\section*{Correspondence}
+Simon Laurin-Lemay\\
+209 Nesbitt Biology Building,\\
+1125 Colonel By Drive Ottawa,\\
+Ontario, CANADA\\
+K1A 0C6\\
+evol.simon@gmail.com\\
+% tel: +1 613 520 2600 x 41941\\
+\clearpage
+\doublespacing
+
+% \section*{Letter}
+% \subfile{sections/letter.md}
+
+\section*{Abstract}
+\subfile{sections/abstract}
+
+\linenumbers
+\section*{Introduction}
+\subfile{sections/introduction}
+
+% \section*{Perspectives}
+% \subfile{sections/perspectives}
+
+% \section*{Results and Discussion}
+% \subfile{sections/results_and_discussion}
+
+% \section*{Materials and Methods}
+% \subfile{sections/materials_and_methods}
+
+% \section*{Supplements}
+% \subfile{sections/supplements.tex}
+
+% \section*{Acknowledgments}
+% \subfile{sections/acknowledgments.tex}
+
+\newpage
+\bibliographystyle{spbasic}
+\bibliography{refs/refs}
+\end{document}
