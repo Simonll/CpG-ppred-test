@@ -3,7 +3,7 @@ import os
 import re
 from typing import Dict
 
-from bintools.run.run import generate_pb_mpi_cmd
+from bintools.run.run import generate_iqtree_cmd
 
 
 def generate_mapping(local, docker, input) -> str:
@@ -11,33 +11,35 @@ def generate_mapping(local, docker, input) -> str:
     return s
 
 
-def wrapper(phylip, tree, output, local, docker) -> str:
+def wrapper(simu, length, values, tree, output, local, docker) -> str:
 
     os.makedirs(
         os.path.dirname(output) + "/",
         exist_ok=True,
     )
-    kwargs: Dict[str, str] = {
-        "-np": str(2),
-        "-d": generate_mapping(local=local, docker=docker, input=phylip),
-        "-T": generate_mapping(local=local, docker=docker, input=tree),
-        "-gtr": "",
-        "-ncat": "1",
-        "-dgam": "4",
-        "-s": "",
-        "-x": "10 200",
-        "-chainname": generate_mapping(local=local, docker=docker, input=output[:-3]),
+
+    kwargs: Dict[str, str] = {}
+
+    with open(values, "r") as stream:
+        gtr4g = stream.read().strip()
+
+    kwargs = {
+        "--alisim": generate_mapping(local, docker, simu),
+        "--seqtype": "DNA",
+        "-af": "fasta",
+        "-t": generate_mapping(local, docker, tree),
+        "-m": gtr4g,
+        "--length": str(length),
     }
 
-    logger: str = " ".join(
-        [
-            "2>",
-            output[:-3] + ".log",
-        ]
-    )
+    logger: str = " ".join(["2>", output[:-3] + ".log"])
 
-    cmd: str = generate_pb_mpi_cmd(
-        method="pb_mpi", mapping=local + ":" + docker, logger=logger, **kwargs
+    cmd: str = generate_iqtree_cmd(
+        method="iqtree2",
+        mapping=local + ":" + docker,
+        logger=logger,
+        image="ubuntu20.04/iqtree:latest",
+        **kwargs
     )
 
     with open(output, "w") as fh:
@@ -50,13 +52,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="argument", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-
     parser.add_argument(
-        "--phylip",
+        "--simu",
         type=str,
         required=True,
     )
-
+    parser.add_argument(
+        "--length",
+        type=int,
+        required=True,
+    )
+    parser.add_argument(
+        "--values",
+        type=str,
+        required=True,
+    )
     parser.add_argument(
         "--tree",
         type=str,
@@ -72,7 +82,6 @@ if __name__ == "__main__":
         type=str,
         required=True,
     )
-
     parser.add_argument(
         "--docker",
         type=str,
@@ -81,7 +90,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     wrapper(
-        phylip=args.phylip,
+        simu=args.simu,
+        length=args.length,
+        values=args.values,
         tree=args.tree,
         output=args.output,
         local=args.local,

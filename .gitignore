@@ -27,3 +27,7 @@
 bioinfo/workflow/.snakemake/*
 bioinfo/workflow/outputs/*
 bioinfo/workflow/scripts/__pycache__
+bioinfo/workflow/notebooks/.ipynb_checkpoints/
+refs/
+*.zip
+letter.md

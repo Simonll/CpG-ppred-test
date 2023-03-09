@@ -13,7 +13,6 @@ def generate_mapping(local: str, docker: str, input: str) -> str:
 
 def wrapper(
     input: str,
-    model: str,
     output: str,
     local: str,
     docker: str,
@@ -63,11 +62,6 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--model",
-        type=str,
-        required=True,
-    )
-    parser.add_argument(
         "--output",
         type=str,
         required=True,
@@ -97,7 +91,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     wrapper(
         input=args.input,
-        model=args.model,
         output=args.output,
         local=args.local,
         docker=args.docker,
