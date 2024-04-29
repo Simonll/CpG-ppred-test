@@ -19,7 +19,7 @@ def genererate_metadata(wildcards):
     return s
 
 def get_modelID(wildcards)-> str:
-    modelID = "F1X4"
+    modelID = "MG-F1x4"
     print(config["modelID"][modelID])
     return "'"+config["modelID"][modelID]+"'"
 
@@ -52,13 +52,13 @@ rule generate_pb_mpi_cmd:
         phylip=ROOT_dir+"/outputs/simulation/data/{geneID}.phylip",
         # tree=get_tree
     output:
-        docker=ROOT_dir+"/outputs/simulation/F1X4/pbmpi/{geneID}-{repID}.sh",
-        cluster=ROOT_dir+"/outputs/simulation/F1X4/pbmpi/{geneID}-{repID}-cluster.sh"
+        docker=ROOT_dir+"/outputs/simulation/MG-F1x4/pbmpi/{geneID}-{repID}.sh",
+        cluster=ROOT_dir+"/outputs/simulation/MG-F1x4/pbmpi/{geneID}-{repID}-cluster.sh"
     params:
         local_root=ROOT_dir,
         docker_root="/data",
         cluster_root="/home/sll/CpG-ppred-test/bioinformatics/workflow",
-        work_dir="/outputs/simulation/F1X4/pbmpi/",
+        work_dir="/outputs/simulation/MG-F1x4/pbmpi/",
         phylip="/outputs/simulation/data/{geneID}.phylip",
         tree=get_tree,
         model=get_modelID,
@@ -88,11 +88,11 @@ rule generate_pb_mpi_cmd:
 
 rule generate_modified_chain:
     input:
-        script=ROOT_dir+"/scripts/generate_F1X4_fixed.py",
+        script=ROOT_dir+"/scripts/generate_MG-F1x4_fixed.py",
         phylip=ROOT_dir+"/outputs/simulation/data/{geneID}.phylip",
-        mcmc=ROOT_dir+"/outputs/simulation/F1X4/pbmpi/{geneID}-{repID}.chain",
+        mcmc=ROOT_dir+"/outputs/simulation/MG-F1x4/pbmpi/{geneID}-{repID}.chain",
     output:
-        ROOT_dir+"/outputs/simulation/F1X4/modified_chain/{geneID}-{omega}-{repID}-{draw}.chain"
+        ROOT_dir+"/outputs/simulation/MG-F1x4/modified_chain/{geneID}-{omega}-{repID}-{draw}.chain"
     params:
         burnin=100,
         omega="{omega}"
@@ -111,10 +111,10 @@ rule generate_modified_chain:
 rule generate_simu_cmd:
     input:
         phylip=ROOT_dir+"/outputs/simulation/data/{geneID}.phylip",
-        mcmc=ROOT_dir+"/outputs/simulation/F1X4/modified_chain/{geneID}-{omega}-{repID}-{draw}.chain"
+        mcmc=ROOT_dir+"/outputs/simulation/MG-F1x4/modified_chain/{geneID}-{omega}-{repID}-{draw}.chain"
     output:
-        sh=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.sh",
-        conf=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.conf"
+        sh=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.sh",
+        conf=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.conf"
     params:
         ss="'pwAC pwAG pwAT pwCG pwCT pwGT dinuc31TA dinuc31CA dinuc31TG dinuc31CG nuc3A nuc3C nuc3G nuc3T pwAA'",
         params="'chainID root lambda_CpG lambda_TpA lambda_TBL lambda_omega nucsA nucsC nucsG nucsT nucrrAC nucrrAG nucrrAT nucrrCG nucrrCT nucrrGT'",
@@ -144,10 +144,10 @@ rule generate_simu_cmd:
 
 rule run_simu_cmd:
     input:
-        ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}}.sh"
+        ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}}.sh"
     output:
-        simu=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.simu",
-        fasta=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
+        simu=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}.simu",
+        fasta=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
     threads: 1
     shell:
         """
@@ -158,8 +158,8 @@ rule run_simu_cmd:
 rule fasta2phylip_on_simu:
     input:
         script=ROOT_dir+"/scripts/data_prep.py",
-        data=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
-    output: ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
+        data=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
+    output: ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
     conda:
         ROOT_dir+"/envs/env.yml"
     shell:
@@ -172,9 +172,9 @@ rule fasta2phylip_on_simu:
 rule compute_CpGfreq_realdata:
     input:
         script=ROOT_dir+"/scripts/compute_CpGfreq.py",
-        fasta=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
+        fasta=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.fasta"
     output:
-        ROOT_dir+"/outputs/simulation/F1X4/simu/stats/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0-OBSERVED.tsv"
+        ROOT_dir+"/outputs/simulation/MG-F1x4/simu/stats/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0-OBSERVED.tsv"
     conda:
         ROOT_dir+"/envs/env.yml"
     params:
@@ -188,16 +188,16 @@ rule compute_CpGfreq_realdata:
 rule generate_pb_mpi_on_simu_cmd:
     input:
         script=ROOT_dir+"/scripts/generate_pb_mpi_cmd.py",
-        phylip=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
+        phylip=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
     output:
-        docker=ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
-        cluster=ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}-cluster.sh"
+        docker=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
+        cluster=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}-cluster.sh"
     params:
         local_root=ROOT_dir,
         docker_root="/data",
         cluster_root="/home/sll/CpG-ppred-test/bioinformatics/workflow/",
-        work_dir="/outputs/simulation/F1X4/simu/pbmpi/",
-        phylip="/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
+        work_dir="/outputs/simulation/MG-F1x4/simu/pbmpi/",
+        phylip="/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
         tree=get_tree,
         model=get_modelID,
         sampling="'-s -x 10 200'",
@@ -226,9 +226,9 @@ rule generate_pb_mpi_on_simu_cmd:
 rule generate_readpb_mpi_ppred_cmd:
     input:
         script=ROOT_dir+"/scripts/generate_readpb_mpi_ppred_cmd.py",
-        data=ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.chain"
+        data=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.chain"
     output:
-        sh=ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
+        sh=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
     params:
         local=ROOT_dir,
         docker="/data",
@@ -250,17 +250,17 @@ rule generate_readpb_mpi_ppred_cmd:
 
 rule run_readpb_mpi_ppred_cmd:
     input:
-        sh=ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
-        phylip=ROOT_dir+"/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
-        param=ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.param",
+        sh=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.sh",
+        phylip=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
+        param=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}.param",
     output:
-        touchdown=ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.touchdown",
-        output_2=ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip"
+        touchdown=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.touchdown",
+        output_2=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip"
     params:
-        sed_cmd="sed -i '7s/.*/"+re.sub("/","\/","/data/outputs/simulation/F1X4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip")+"/'",
-        zip_distat_cmd="zip " +  ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip " +  ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_*.ali",
-        mv_distat_cmd="mv "+ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip "+ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/",
-        rm_distat_s_cmd="rm "+ROOT_dir+"/outputs/simulation/F1X4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_*.ali",
+        sed_cmd="sed -i '7s/.*/"+re.sub("/","\/","/data/outputs/simulation/MG-F1x4/simu/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip")+"/'",
+        zip_distat_cmd="zip " +  ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip " +  ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_*.ali",
+        mv_distat_cmd="mv "+ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip "+ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/",
+        rm_distat_s_cmd="rm "+ROOT_dir+"/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_*.ali",
 
     threads: 2
     shell:
@@ -273,9 +273,9 @@ rule run_readpb_mpi_ppred_cmd:
 rule compute_CpGfreq:
     input:
         script=ROOT_dir+"/scripts/compute_CpGfreq.py",
-        zip=ROOT_dir+"/outputs/simulation/F1X4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip"
+        zip=ROOT_dir+"/outputs/simulation/MG-F1x4/simu/readpb/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.zip"
     output:
-        ROOT_dir+"/outputs/simulation/F1X4/simu/stats/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.tsv"
+        ROOT_dir+"/outputs/simulation/MG-F1x4/simu/stats/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-{repID_}_ppred.tsv"
     conda:
         ROOT_dir+"/envs/env.yml"
     params:

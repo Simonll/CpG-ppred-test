@@ -12,7 +12,7 @@ if ROOT_dir not in sys.path:
 configfile: ROOT_dir + "/configs/configs.yaml"
 GENEID = config["empirical"]["geneID"]
 REPID = ["A"]
-MODELID = ["GTR4GNT", "F1X4"]
+MODELID = ["GTR4GNT", "MG-F1x4"]
 
 rule all:
     input:

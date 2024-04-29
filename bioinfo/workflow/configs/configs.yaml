@@ -1,7 +1,7 @@
 modelID:
   GTR4GNT: "-gtr -ncat 1 -dgam 4"
-  F1X4: "-mutsel -catfix uniform -uni"
-  F1X4W: "-mutsel -catfix uniform -freeomega -uni"
+  MG-F1x4: "-mutsel -catfix uniform -uni"
+  MG-F1x4W: "-mutsel -catfix uniform -freeomega -uni"
 simulation:
   geneID: ["WDR91","GPAM","STRIP1","CSRP2BP","HSPA4","MEP1A","MYB","PDE6A","SEMA3D","TNFAIP3"]
 empirical:

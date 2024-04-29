@@ -8,7 +8,7 @@ from bintools.phylobayes.mcmc_parser import posterior_M0_GTR
 from bintools.phylobayes.priors import prior_M7M8_fix
 
 
-def generate_M0GTR_fixed(phylip, mcmc, burnin, omega, output) -> bool:
+def generate_MGF1x4_fixed(phylip, mcmc, burnin, omega, output) -> bool:
 
     os.makedirs(
         os.path.dirname(output) + "/",
@@ -17,10 +17,10 @@ def generate_M0GTR_fixed(phylip, mcmc, burnin, omega, output) -> bool:
     Nsite: int = -1
     with open(phylip) as stream:
         Nsite = int(read_phylip(fh=stream).get_n_site() / 3)
-        pM0GTR: posterior_M0_GTR = posterior_M0_GTR.parse_mcmc(
+        pMGF1x4: posterior_M0_GTR = posterior_M0_GTR.parse_mcmc(
             mcmc_path=Path(mcmc), burnin=int(burnin)
         )
-        params: Dict[str, str] = pM0GTR.sample()
+        params: Dict[str, str] = pMGF1x4.sample()
         params.update({"omega_site": prior_M7M8_fix(N=Nsite, value=float(omega))})
         if os.path.exists(output):
             append_write = "a"  # append if already exists
@@ -31,7 +31,7 @@ def generate_M0GTR_fixed(phylip, mcmc, burnin, omega, output) -> bool:
             output,
             append_write,
         ) as fl:
-            pM0GTR.write_values(dict_of_params=params, file_handler=fl)
+            pMGF1x4.write_values(dict_of_params=params, file_handler=fl)
     return True
 
 
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    generate_M0GTR_fixed(
+    generate_MGF1x4_fixed(
         phylip=args.phylip,
         mcmc=args.mcmc,
         burnin=args.burnin,
