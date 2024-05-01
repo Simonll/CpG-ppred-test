@@ -23,10 +23,6 @@ def get_modelID(wildcards)-> str:
     print(config["modelID"][modelID])
     return "'"+config["modelID"][modelID]+"'"
 
-def get_tree(wildcards)-> str:
-    if wildcards.geneID == "concat":
-        return ROOT_dir+"/data/"+"Mammalia-39sp-CAT_unrooted_withoutsupport.tre"
-
 def get_Nsite(wildcards)-> int:
     geneID = wildcards.geneID
     return int(config["Nsites"][geneID])
@@ -50,17 +46,16 @@ rule generate_pb_mpi_cmd:
     input:
         script=ROOT_dir+"/scripts/generate_pb_mpi_cmd.py",
         phylip=ROOT_dir+"/outputs/simulation/data/{geneID}.phylip",
-        # tree=get_tree
     output:
         docker=ROOT_dir+"/outputs/simulation/MG-F1x4/pbmpi/{geneID}-{repID}.sh",
         cluster=ROOT_dir+"/outputs/simulation/MG-F1x4/pbmpi/{geneID}-{repID}-cluster.sh"
     params:
         local_root=ROOT_dir,
         docker_root="/data",
-        cluster_root="/home/sll/CpG-ppred-test/bioinformatics/workflow",
+        cluster_root="/home/sll/CpG-ppred-test/bioinfo/workflow",
         work_dir="/outputs/simulation/MG-F1x4/pbmpi/",
         phylip="/outputs/simulation/data/{geneID}.phylip",
-        tree=get_tree,
+        tree="/data/Mammalia-39sp-CAT_unrooted_withoutsupport.tre",
         model=get_modelID,
         sampling="'-s -x 10 200'",
         np="4",
@@ -195,10 +190,10 @@ rule generate_pb_mpi_on_simu_cmd:
     params:
         local_root=ROOT_dir,
         docker_root="/data",
-        cluster_root="/home/sll/CpG-ppred-test/bioinformatics/workflow/",
+        cluster_root="/home/sll/CpG-ppred-test/bioinfo/workflow/",
         work_dir="/outputs/simulation/MG-F1x4/simu/pbmpi/",
         phylip="/outputs/simulation/MG-F1x4/simu/pbmpi/{geneID}-{omega}-{CpG}-{TpA}-{tbl}-{repID}-{draw}-1_0.phylip",
-        tree=get_tree,
+        tree="/data/Mammalia-39sp-CAT_unrooted_withoutsupport.tre",
         model=get_modelID,
         sampling="'-s -x 10 200'",
         np="4",

@@ -19,20 +19,9 @@ def genererate_metadata(wildcards):
     modelID = wildcards.modelID
     s += "'geneID':'"+ geneID+"'"
     s += ",'modelID':'"+modelID+"'"
-    if "repID" in wildcards:
-        repID = wildcards.repID
-        s+= ",'repID':'"+repID+"'"
+    s+= ",'repID':'"+repID+"'"
     s+='"}'
     return s
-
-def get_tree(wildcards):
-    if wildcards.geneID == "concat":
-        return ROOT_dir+"/data/"+"Mammalia-39sp-CAT_unrooted_withoutsupport.tre"
-
-def get_tree_docker(wildcards):
-    if wildcards.geneID == "concat":
-        return "/data/"+"Mammalia-39sp-CAT_unrooted_withoutsupport.tre"
-
 
 rule fasta2phylip:
     input:
@@ -58,10 +47,10 @@ rule generate_pb_mpi_cmd:
     params:
         local_root=ROOT_dir,
         docker_root="/data",
-        cluster_root="/home/sll/CpG-ppred-test/bioinformatics/workflow/",
+        cluster_root="/home/sll/CpG-ppred-test/bioinfo/workflow",
         work_dir="/outputs/empirical/pbmpi/{modelID}/",
         phylip="/outputs/empirical/data/{geneID}.phylip",
-        tree=get_tree,
+        tree="/data/Mammalia-39sp-CAT_unrooted_withoutsupport.tre",
         model=get_modelID,
         sampling="'-s -x 10 200'",
         np="4",
